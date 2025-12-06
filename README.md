@@ -211,8 +211,6 @@ pytest tests/property/test_models_property.py
 ```
 python3.py
 ```
-<img width="1470" height="956" alt="Screenshot 2025-12-06 at 7 31 13 PM" src="https://github.com/user-attachments/assets/5ba85819-e465-4077-9388-8b51f8a11e7a" />
-
 <img width="1470" height="956" alt="Screenshot 2025-12-06 at 9 10 19 PM" src="https://github.com/user-attachments/assets/695a00f9-a1a9-400b-af35-ab8e7dd9c2d7" />
 
 
