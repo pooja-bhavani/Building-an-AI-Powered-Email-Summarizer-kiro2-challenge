@@ -1,5 +1,8 @@
 # ✨ Email Summarizer - AI-Powered Email Management
 
+<img width="1470" height="956" alt="Screenshot 2025-12-06 at 8 20 46 PM" src="https://github.com/user-attachments/assets/a6fe68a2-30b3-4f0d-9c2f-294b965d872f" />
+
+
 > **AI for Bharat - Week 2: Lazy Automation Challenge**  
 > "I hate manually reading through hundreds of emails, so I built this."
 
