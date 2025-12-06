@@ -18,7 +18,7 @@ Before running the app kiro created:
 - design.md - Which creates architecture, overview, components interfaces etc.
 - task.md - Here it organizes the tasks shows and runs how the tasks will run in sequence.
 
-**requirements.txt files** 
+**requirements.txt** 
 <img width="1470" height="956" alt="Screenshot 2025-12-06 at 9 05 47 PM" src="https://github.com/user-attachments/assets/46dd3006-ca6e-47a2-9831-d14459d10941" />
 
 **design.md**
