@@ -1,0 +1,26 @@
+# Core dependencies
+flask==3.0.0
+python-dotenv==1.0.0
+cryptography==41.0.7
+
+# Email providers
+google-auth==2.25.2
+google-auth-oauthlib==1.2.0
+google-auth-httplib2==0.2.0
+google-api-python-client==2.110.0
+
+# AI/ML
+openai==1.6.1
+
+# Testing
+pytest==7.4.3
+hypothesis==6.92.1
+
+# CLI
+click==8.1.7
+
+# TUI
+textual==0.47.1
+
+# Utilities
+python-dateutil==2.8.2

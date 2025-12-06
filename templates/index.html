@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Email Summarizer - AI-Powered</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f172a;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1), transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1), transparent 40%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 32px 40px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 15px;
+            color: #94a3b8;
+        }
+
+        .connection-form, .compose-form, .task-form {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .connection-form h2, .compose-form h2, .task-form h2 {
+            color: #f1f5f9;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: #64748b;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #1e293b;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status {
+            margin-left: auto;
+            padding: 8px 16px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            font-weight: 500;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .email-list, .summaries {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .email-list.active, .summaries.active {
+            display: block;
+        }
+
+        .email-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .email-item:hover {
+            border-color: #3b82f6;
+            background: #1e293b;
+        }
+
+        .email-item.selected {
+            background: #1e3a5f;
+            border-color: #3b82f6;
+        }
+
+        .email-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #475569;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .email-item.selected .checkbox {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .email-sender {
+            font-weight: 500;
+            color: #3b82f6;
+            font-size: 14px;
+        }
+
+        .email-date {
+            margin-left: auto;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .email-subject {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #f1f5f9;
+        }
+
+        .email-preview {
+            color: #94a3b8;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .email-actions {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #334155;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .summary-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .summary-header {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .summary-header h3 {
+            color: #f1f5f9;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .summary-text {
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            color: #e2e8f0;
+        }
+
+        .key-points h4, .action-items h4 {
+            color: #f1f5f9;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .key-points li, .action-items li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .key-points li:before {
+            content: "🔑";
+            position: absolute;
+            left: 0;
+        }
+
+        .action-items li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            background: #7f1d1d;
+            border: 1px solid #991b1b;
+            color: #fecaca;
+        }
+
+        .alert-success {
+            background: #064e3b;
+            border: 1px solid #065f46;
+            color: #a7f3d0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .search-bar {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-input::placeholder {
+            color: #64748b;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #1e293b;
+        }
+
+        .email-item.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ Email Summarizer</h1>
+            <p>AI-Powered Email Management & Task Automation</p>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="search-bar">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="searchInput" 
+                placeholder="Search emails by sender, subject, or content..."
+                oninput="searchEmails()"
+            >
+        </div>
+
+        <div class="controls active" id="controls">
+            <button class="btn btn-primary" onclick="fetchEmails()">📥 Fetch Emails</button>
+            <button class="btn btn-success" onclick="showComposeModal()">✉️ Compose</button>
+            <button class="btn btn-success" onclick="summarizeSelected()">✨ Summarize</button>
+            <button class="btn btn-success" onclick="batchSummarize()">📊 Batch</button>
+            <button class="btn btn-secondary" onclick="selectAll()">☑️ Select All</button>
+            <button class="btn btn-secondary" onclick="clearSearch()">🔄 Clear Search</button>
+            <button class="btn btn-danger" onclick="disconnect()">🔌 Disconnect</button>
+            <div class="status" id="status">Ready</div>
+        </div>
+
+        <div class="email-list" id="emailList"></div>
+        <div class="summaries" id="summaries"></div>
+
+        <!-- Compose Email Modal -->
+        <div class="modal" id="composeModal">
+            <div class="modal-content">
+                <h2>✉️ Compose Email</h2>
+                <div class="form-group">
+                    <label>To</label>
+                    <input type="email" id="composeTo" placeholder="recipient@example.com" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" id="composeSubject" placeholder="Email subject" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="composeBody" placeholder="Write your message..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="sendEmail()">📤 Send</button>
+                    <button class="btn btn-secondary" onclick="closeComposeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Task Modal -->
+        <div class="modal" id="taskModal">
+            <div class="modal-content">
+                <h2>📋 Create Task from Email</h2>
+                <div id="taskEmailInfo" style="margin-bottom: 16px; padding: 12px; background: #0f172a; border-radius: 8px; color: #94a3b8; font-size: 13px;"></div>
+                <div class="form-group">
+                    <label>Task Title</label>
+                    <input type="text" id="taskTitle" placeholder="Task title" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="taskDescription" placeholder="Task description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="taskDueDate">
+                </div>
+                <div class="form-group">
+                    <label>Priority</label>
+                    <select id="taskPriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="createTask()">✅ Create Task</button>
+                    <button class="btn btn-secondary" onclick="closeTaskModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let emails = [];
+        let filteredEmails = [];
+        let selectedIds = new Set();
+
+        // Auto-load emails on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            fetchEmails();
+        });
+
+        function searchEmails() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                filteredEmails = emails;
+            } else {
+                filteredEmails = emails.filter(email => {
+                    return email.sender.toLowerCase().includes(searchTerm) ||
+                           email.subject.toLowerCase().includes(searchTerm) ||
+                           email.body.toLowerCase().includes(searchTerm) ||
+                           email.full_body.toLowerCase().includes(searchTerm);
+                });
+            }
+            
+            renderEmails();
+            
+            const count = filteredEmails.length;
+            const total = emails.length;
+            if (searchTerm) {
+                document.getElementById('status').textContent = `Found ${count} of ${total} emails`;
+            } else {
+                document.getElementById('status').textContent = `${total} emails loaded`;
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            searchEmails();
+        }
+
+        async function fetchEmails() {
+            document.getElementById('status').textContent = 'Fetching emails...';
+            document.getElementById('emailList').innerHTML = '<div class="loading">Loading emails...</div>';
+            document.getElementById('emailList').classList.add('active');
+
+            try {
+                const response = await fetch('/api/emails?limit=20');
+                const data = await response.json();
+
+                if (response.ok) {
+                    emails = data.emails;
+                    filteredEmails = emails;
+                    renderEmails();
+                    document.getElementById('status').textContent = `${emails.length} emails loaded`;
+                } else {
+                    showAlert('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Failed to fetch emails: ' + error.message, 'error');
+            }
+        }
+
+        function renderEmails() {
+            const container = document.getElementById('emailList');
+            container.innerHTML = '';
+
+            const emailsToRender = filteredEmails.length > 0 || document.getElementById('searchInput').value ? filteredEmails : emails;
+
+            if (emailsToRender.length === 0) {
+                container.innerHTML = '<div class="loading">No emails found matching your search.</div>';
+                return;
+            }
+
+            emailsToRender.forEach(email => {
+                const isSelected = selectedIds.has(email.id);
+                const div = document.createElement('div');
+                div.className = `email-item ${isSelected ? 'selected' : ''}`;
+                div.onclick = () => toggleSelect(email.id);
+
+                div.innerHTML = `
+                    <div class="email-header">
+                        <div class="checkbox">${isSelected ? '✓' : ''}</div>
+                        <span class="email-sender">${email.sender}</span>
+                        <span class="email-date">${email.date}</span>
+                        ${email.has_attachments ? '<span>📎</span>' : ''}
+                    </div>
+                    <div class="email-subject">${email.subject}</div>
+                    <div class="email-preview">${email.body}</div>
+                    <div class="email-actions">
+                        <button class="btn btn-small btn-secondary" onclick="event.stopPropagation(); showTaskModal('${email.id}')">📋 Create Task</button>
+                    </div>
+                `;
+
+                container.appendChild(div);
+            });
+        }
+
+        function toggleSelect(emailId) {
+            if (selectedIds.has(emailId)) {
+                selectedIds.delete(emailId);
+            } else {
+                selectedIds.add(emailId);
+            }
+            renderEmails();
+            document.getElementById('status').textContent = `${selectedIds.size} email(s) selected`;
+        }
+
+        function selectAll() {
+            const emailsToSelect = filteredEmails.length > 0 || document.getElementById('searchInput').value ? filteredEmails : emails;
+            selectedIds = new Set(emailsToSelect.map(e => e.id));
+            renderEmails();
+            document.getElementById('status').textContent = `${selectedIds.size} emails selected`;
+        }
+
+        async function summarizeSelected() {
+            if (selectedIds.size === 0) {
+                showAlert('Please select at least one email', 'error');
+                return;
+            }
+
+            document.getElementById('status').textContent = 'Generating AI summaries...';
+
+            try {
+                const response = await fetch('/api/summarize', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email_ids: Array.from(selectedIds)})
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displaySummaries(data.summaries);
+                } else {
+                    showAlert('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Summarization failed: ' + error.message, 'error');
+            }
+        }
+
+        async function batchSummarize() {
+            if (selectedIds.size === 0) {
+                showAlert('Please select at least one email', 'error');
+                return;
+            }
+
+            document.getElementById('status').textContent = 'Generating batch summary...';
+
+            try {
+                const response = await fetch('/api/batch-summarize', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email_ids: Array.from(selectedIds)})
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayBatchSummary(data.batch_summary);
+                } else {
+                    showAlert('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Batch summarization failed: ' + error.message, 'error');
+            }
+        }
+
+        function displaySummaries(summaries) {
+            const container = document.getElementById('summaries');
+            container.innerHTML = '<button class="btn" onclick="showEmails()" style="background: rgba(255,255,255,0.2); color: white; margin-bottom: 16px;">← Back</button>';
+
+            summaries.forEach((summary, index) => {
+                const div = document.createElement('div');
+                div.className = 'summary-item';
+                div.innerHTML = `
+                    <div class="summary-header">
+                        <h3>📧 Summary ${index + 1}</h3>
+                        <div style="color: rgba(255,255,255,0.7); font-size: 13px;">
+                            <div><strong>From:</strong> ${summary.sender}</div>
+                            <div><strong>Subject:</strong> ${summary.subject}</div>
+                        </div>
+                    </div>
+                    <div class="summary-text">${summary.summary_text}</div>
+                    <div class="key-points">
+                        <h4>🔑 Key Points</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            ${summary.key_points.map(p => `<li>${p}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="action-items">
+                        <h4>✅ Action Items</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            ${summary.action_items.map(a => `<li>${a}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('emailList').classList.remove('active');
+            container.classList.add('active');
+            document.getElementById('status').textContent = `${summaries.length} summaries generated`;
+        }
+
+        function displayBatchSummary(batch) {
+            const container = document.getElementById('summaries');
+            container.innerHTML = `
+                <button class="btn" onclick="showEmails()" style="background: rgba(255,255,255,0.2); color: white; margin-bottom: 16px;">← Back</button>
+                <div class="summary-item">
+                    <h3 style="color: white; margin-bottom: 16px;">📊 Batch Summary (${batch.email_count} emails)</h3>
+                    <p style="color: white; line-height: 1.7; margin-bottom: 20px;">${batch.consolidated_summary}</p>
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: white; margin-bottom: 10px;">🎯 Common Themes:</h4>
+                        <ul style="list-style: none; padding: 0; color: rgba(255,255,255,0.9);">
+                            ${batch.common_themes.map(t => `<li style="padding: 5px 0;">• ${t}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: white; margin-bottom: 10px;">🚨 Urgent Items:</h4>
+                        <ul style="list-style: none; padding: 0; color: rgba(255,255,255,0.9);">
+                            ${batch.urgent_items.map(i => `<li style="padding: 5px 0;">• ${i}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('emailList').classList.remove('active');
+            container.classList.add('active');
+            document.getElementById('status').textContent = 'Batch summary complete';
+        }
+
+        function showEmails() {
+            document.getElementById('emailList').classList.add('active');
+            document.getElementById('summaries').classList.remove('active');
+        }
+
+        async function disconnect() {
+            location.reload();
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        // Compose Email Functions
+        function showComposeModal() {
+            document.getElementById('composeModal').classList.add('active');
+        }
+
+        function closeComposeModal() {
+            document.getElementById('composeModal').classList.remove('active');
+            document.getElementById('composeTo').value = '';
+            document.getElementById('composeSubject').value = '';
+            document.getElementById('composeBody').value = '';
+        }
+
+        async function sendEmail() {
+            const to = document.getElementById('composeTo').value;
+            const subject = document.getElementById('composeSubject').value;
+            const body = document.getElementById('composeBody').value;
+
+            if (!to || !subject || !body) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/compose', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({to, subject, body})
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert('✅ Email sent successfully!', 'success');
+                    closeComposeModal();
+                } else {
+                    showAlert('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Failed to send email: ' + error.message, 'error');
+            }
+        }
+
+        // Task Creation Functions
+        let currentTaskEmailId = null;
+
+        function showTaskModal(emailId) {
+            currentTaskEmailId = emailId;
+            const email = emails.find(e => e.id === emailId);
+            
+            if (email) {
+                document.getElementById('taskEmailInfo').innerHTML = `
+                    <strong>From:</strong> ${email.sender}<br>
+                    <strong>Subject:</strong> ${email.subject}
+                `;
+                document.getElementById('taskTitle').value = email.subject;
+                document.getElementById('taskDescription').value = email.body.substring(0, 200);
+            }
+            
+            document.getElementById('taskModal').classList.add('active');
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').classList.remove('active');
+            currentTaskEmailId = null;
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDescription').value = '';
+            document.getElementById('taskDueDate').value = '';
+            document.getElementById('taskPriority').value = 'medium';
+        }
+
+        async function createTask() {
+            const title = document.getElementById('taskTitle').value;
+            const description = document.getElementById('taskDescription').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const priority = document.getElementById('taskPriority').value;
+
+            if (!title) {
+                alert('Please enter a task title');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/create-task', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email_id: currentTaskEmailId,
+                        task_title: title,
+                        task_description: description,
+                        due_date: dueDate,
+                        priority: priority
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert('✅ Task created successfully!', 'success');
+                    closeTaskModal();
+                } else {
+                    showAlert('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Failed to create task: ' + error.message, 'error');
+            }
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('composeModal').addEventListener('click', function(e) {
+            if (e.target === this) closeComposeModal();
+        });
+
+        document.getElementById('taskModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTaskModal();
+        });
+    </script>
+</body>
+</html>
