@@ -12,6 +12,21 @@ An intelligent email management system that uses AI to automatically summarize e
 ![Flask](https://img.shields.io/badge/Flask-3.0+-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+## How kiro helpled me?
+Before running the app kiro created:
+- Implementation plan - requirements.txt that providess detailed plan of what the app will do and how it should behave.
+- design.md - Which creates architecture, overview, components interfaces etc.
+- task.md - Here it organizes the tasks shows and runs how the tasks will run in sequence.
+
+**requirements.txt files** 
+<img width="1470" height="956" alt="Screenshot 2025-12-06 at 9 05 47 PM" src="https://github.com/user-attachments/assets/46dd3006-ca6e-47a2-9831-d14459d10941" />
+
+**design.md**
+<img width="1470" height="956" alt="Screenshot 2025-12-06 at 9 06 35 PM" src="https://github.com/user-attachments/assets/fe712580-a751-4516-9964-b9624d52ceab" />
+
+**task.md (task list)**
+<img width="1470" height="956" alt="Screenshot 2025-12-06 at 9 07 10 PM" src="https://github.com/user-attachments/assets/fa4132e6-57bf-4595-8b8c-c7369d66623c" />
+
 ## 🎯 Problem Statement
 
 Email overload is real. Professionals receive 100+ emails daily, spending hours reading, categorizing, and extracting action items. This manual process is:
@@ -59,8 +74,6 @@ python3 app.py
 ```
 http://localhost:8080
 ```
-
-That's it! The app comes with 20 demo emails pre-loaded and uses Mock AI (no API key needed).
 
 ## 🎮 Features
 
