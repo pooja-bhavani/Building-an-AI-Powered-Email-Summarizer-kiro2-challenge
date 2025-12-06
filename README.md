@@ -168,36 +168,6 @@ email-summarizer/
 - Clear visual feedback
 - Intuitive controls
 
-## 🔧 Configuration
-
-### Optional: OpenAI Integration
-
-If you want to use real OpenAI GPT-4 instead of Mock AI:
-
-1. Get an API key from https://platform.openai.com/api-keys
-
-2. Create a `.env` file:
-```bash
-OPENAI_API_KEY=sk-your-actual-api-key-here
-```
-
-3. Restart the app - it will automatically use OpenAI
-
-### Environment Variables
-
-```bash
-# OpenAI Configuration (Optional)
-OPENAI_API_KEY=your-api-key-here
-
-# Summarization Settings
-SUMMARY_LENGTH=standard          # brief, standard, or detailed
-SUMMARY_LANGUAGE=en             # Language code
-AI_MODEL=gpt-4                  # gpt-4 or gpt-3.5-turbo
-
-# Storage
-SUMMARIES_DIR=summaries         # Directory for saved summaries
-```
-
 ## 📊 How It Works
 
 ### Mock AI Summarizer
@@ -236,6 +206,13 @@ pytest --cov=src tests/
 # Run specific test file
 pytest tests/property/test_models_property.py
 ```
+
+# To application run in UI
+```
+python3.py
+```
+<img width="1470" height="956" alt="Screenshot 2025-12-06 at 7 31 13 PM" src="https://github.com/user-attachments/assets/5ba85819-e465-4077-9388-8b51f8a11e7a" />
+
 
 ## 📝 Development with Kiro
 
